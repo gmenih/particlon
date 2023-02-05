@@ -41,9 +41,7 @@ func (q *QuadTree) Insert(particle *Particle) bool {
 
 	for _, n := range q.nodes {
 		for _, p := range q.particles {
-			if n.Insert(p) {
-				break
-			}
+			n.Insert(p)
 		}
 	}
 

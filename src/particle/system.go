@@ -5,6 +5,7 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
 type ParticleSystem struct {
@@ -12,13 +13,16 @@ type ParticleSystem struct {
 
 	Width  int
 	Height int
+
+	sprites Sprites
 }
 
 func NewParticleSystem(width, height int) *ParticleSystem {
 	return &ParticleSystem{
 		Width:     width,
 		Height:    height,
-		Particles: randomParticles(float64(width), float64(height)),
+		Particles: NewQuadTree(0, 0, float64(width), float64(height)),
+		sprites:   generateSprites(),
 	}
 }
 
@@ -30,6 +34,17 @@ func (s *ParticleSystem) Update() error {
 
 		p.Update()
 	})
+
+	if inpututil.IsMouseButtonJustReleased(ebiten.MouseButtonLeft) {
+		x, y := ebiten.CursorPosition()
+		s.Particles.Insert(NewParticle(
+			VV(float64(x), float64(y)),
+			VV(0, 0),
+			colors[0],
+			s.sprites[colors[0]],
+			3,
+		))
+	}
 
 	return nil
 }
