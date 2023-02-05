@@ -8,8 +8,8 @@ import (
 )
 
 type Particle struct {
-	Position *Vector
-	Velocity *Vector
+	Position Vector
+	Velocity Vector
 	Size     int
 	Color    color.Color
 	Sprite   *ebiten.Image
@@ -17,8 +17,8 @@ type Particle struct {
 
 func NewParticle(position, velocity Vector, color color.Color, sprite *ebiten.Image, size int) *Particle {
 	return &Particle{
-		Position: &position,
-		Velocity: &velocity,
+		Position: position,
+		Velocity: velocity,
 		Size:     size,
 		Color:    color,
 		Sprite:   sprite,
@@ -37,12 +37,11 @@ func NewRandomParticle(w, h float64, sprites Sprites) *Particle {
 
 	return NewParticle(
 		VV(x, y),
-		VV(rand.Float64()*5-1, rand.Float64()*5-1),
+		VV(0, 0),
 		c,
 		v,
 		2,
 	)
-
 }
 
 func (p *Particle) Update() {
@@ -62,4 +61,22 @@ func (p *Particle) Copy() *Particle {
 		Color:    p.Color,
 		Size:     p.Size,
 	}
+}
+
+func (p *Particle) Attract(other *Particle) {
+	p.Velocity = p.Velocity.Add(p.AttractForce(other))
+}
+
+func (p *Particle) AttractForce(other *Particle) Vector {
+	if p == other {
+		return VV(0, 0)
+	}
+
+	direction := other.Position.Sub(p.Position)
+	distance := direction.Mag()
+	direction = direction.Normalize()
+
+	force := direction.Scale(0.1 / (distance * distance))
+
+	return force
 }

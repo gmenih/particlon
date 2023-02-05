@@ -14,15 +14,13 @@ var colors []color.Color = []color.Color{
 	colornames.Red,
 	colornames.Orange,
 	colornames.Yellow,
-	colornames.Green,
 	colornames.Blue,
-	colornames.Indigo,
 	colornames.Violet,
 }
 
 func generateSprites() Sprites {
 	var sprites Sprites = make(map[color.Color]*ebiten.Image, len(colors))
-	size := 6
+	size := 4
 	half := float64(size) / 2
 
 	for _, c := range colors {
