@@ -1,6 +1,14 @@
 package particle
 
-const MAX_CAPACITY = 4
+import (
+	"image/color"
+
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"golang.org/x/image/colornames"
+)
+
+const MAX_CAPACITY = 16
 
 type QuadTree struct {
 	boundary  Bounds
@@ -49,6 +57,27 @@ func (q *QuadTree) Insert(v *Particle) bool {
 	}
 
 	return false
+}
+
+func (q *QuadTree) Debug(screen *ebiten.Image, depth int) {
+	if q.divided {
+		for _, node := range q.nodes {
+			node.Debug(screen, depth+1)
+		}
+	}
+
+	colors := []color.Color{
+		colornames.Red,
+		colornames.Orange,
+		colornames.Yellow,
+		colornames.Blue,
+		colornames.Violet,
+	}
+
+	ebitenutil.DrawLine(screen, q.boundary.Min.X, q.boundary.Min.Y, q.boundary.Max.X, q.boundary.Min.Y, colors[depth%len(colors)])
+	ebitenutil.DrawLine(screen, q.boundary.Max.X, q.boundary.Min.Y, q.boundary.Max.X, q.boundary.Max.Y, colors[depth%len(colors)])
+	ebitenutil.DrawLine(screen, q.boundary.Max.X, q.boundary.Max.Y, q.boundary.Min.X, q.boundary.Max.Y, colors[depth%len(colors)])
+	ebitenutil.DrawLine(screen, q.boundary.Min.X, q.boundary.Max.Y, q.boundary.Min.X, q.boundary.Min.Y, colors[depth%len(colors)])
 }
 
 func (q *QuadTree) ForEach(f func(*Particle)) {

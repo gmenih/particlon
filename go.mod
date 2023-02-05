@@ -3,8 +3,6 @@ module gmenih/particlon
 go 1.19
 
 require (
-	github.com/faiface/pixel v0.10.0
-	github.com/hajimehoshi/ebiten v1.12.12
 	github.com/hajimehoshi/ebiten/v2 v2.4.16
 	golang.org/x/image v0.3.0
 )

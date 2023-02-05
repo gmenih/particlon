@@ -12,6 +12,13 @@ func BB(minX, minY, maxX, maxY float64) Bounds {
 	}
 }
 
+func Around(v Vector, r float64) Bounds {
+	return Bounds{
+		Min: VV(v.X-r, v.Y-r),
+		Max: VV(v.X+r, v.Y+r),
+	}
+}
+
 func (b Bounds) Contains(v Vector) bool {
 	return v.X >= b.Min.X && v.X <= b.Max.X && v.Y >= b.Min.Y && v.Y <= b.Max.Y
 }

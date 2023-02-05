@@ -16,13 +16,6 @@ func (v Vector) VV() (float64, float64) {
 	return v.X, v.Y
 }
 
-func (v Vector) Copy() Vector {
-	return Vector{
-		X: v.X,
-		Y: v.Y,
-	}
-}
-
 func (v *Vector) Add(v2 Vector) Vector {
 	return Vector{
 		X: v.X + v2.X,

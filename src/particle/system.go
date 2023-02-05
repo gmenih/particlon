@@ -7,7 +7,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
 
-const particleCount = 10_000
+const particleCount = 5_00
 
 type ParticleSystem struct {
 	Particles *QuadTree
@@ -26,8 +26,7 @@ func NewParticleSystem(width, height int) *ParticleSystem {
 
 func (s *ParticleSystem) Update() error {
 	s.Particles.ForEach(func(p *Particle) {
-		x, y := p.Position.VV()
-		s.Particles.ForBoundary(BB(x-20, y-20, x+20, y+20), func(o *Particle) {
+		s.Particles.ForBoundary(Around(p.Position, 10), func(o *Particle) {
 			p.Attract(o)
 		})
 
@@ -43,6 +42,7 @@ func (s *ParticleSystem) Draw(screen *ebiten.Image) {
 	})
 
 	ebitenutil.DebugPrint(screen, fmt.Sprintf("TPS: %0.2f", ebiten.ActualTPS()))
+	s.Particles.Debug(screen, 0)
 }
 
 func (s *ParticleSystem) Layout(outsideWidth, outsideHeight int) (int, int) {
