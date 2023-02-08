@@ -6,7 +6,7 @@ import (
 )
 
 type ParticleSystem struct {
-	Particles *QuadTree
+	Particles *SpatialIndex
 
 	Width  int
 	Height int
@@ -26,14 +26,16 @@ func NewParticleSystem(width, height int) *ParticleSystem {
 
 func (s *ParticleSystem) Update() error {
 	s.Particles.ForEach(func(p *Particle) {
-		s.Particles.ForBoundary(Around(p.Position, 50), func(o *Particle) {
-			p.Attract(o)
+		s.Particles.ForAround(p.Position, 50, func(o *Particle) {
+			o.Attract(p)
 		})
 
 		p.Update()
 	})
 
-	s.Particles = s.Particles.Rebalance()
+	s.Particles.Rebalance()
+
+	// s.Particles = s.Particles.Rebalance()
 
 	if inpututil.IsMouseButtonJustReleased(ebiten.MouseButtonLeft) {
 		x, y := ebiten.CursorPosition()
@@ -50,26 +52,27 @@ func (s *ParticleSystem) Update() error {
 }
 
 func (s *ParticleSystem) Draw(screen *ebiten.Image) {
-	s.Particles.ForEach(func(p *Particle) {
-		p.Draw(screen)
-	})
+	// s.Particles.ForEach(func(p *Particle) {
+	// 	p.Draw(screen)
+	// })
 
 	// ebitenutil.DebugPrint(screen, fmt.Sprintf("TPS: %0.2f", ebiten.ActualTPS()))
 	// ebitenutil.DebugPrint(screen, fmt.Sprintf("FPS: %0.2f", ebiten.ActualFPS()))
-	// s.Particles.Debug(screen, 0)
+	s.Particles.Debug(screen)
 }
 
 func (s *ParticleSystem) Layout(outsideWidth, outsideHeight int) (int, int) {
 	return s.Width, s.Height
 }
 
-func randomParticles(w, h float64) *QuadTree {
+func randomParticles(w, h float64) *SpatialIndex {
 	var sprites = generateSprites()
-	var particles *QuadTree = NewQuadTree(0, 0, w, h, nil)
+	var index = NewSpatialIndex(0, 0, w, h, 50)
+	// var particles *QuadTree = NewQuadTree(0, 0, w, h, nil)
 
 	for i := 0; i < PARTICLE_COUNT; i++ {
-		particles.Insert(NewRandomParticle(w, h, sprites))
+		index.Insert(NewRandomParticle(w, h, sprites))
 	}
 
-	return particles
+	return index
 }
