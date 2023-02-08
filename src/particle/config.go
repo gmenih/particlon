@@ -2,5 +2,5 @@ package particle
 
 const (
 	QUAD_MAX_CAPACITY = 4
-	PARTICLE_COUNT    = 0
+	PARTICLE_COUNT    = 10_000
 )

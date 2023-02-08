@@ -76,7 +76,7 @@ func (p *Particle) AttractForce(other *Particle) Vector {
 	distance := direction.Mag()
 	direction = direction.Normalize()
 
-	force := direction.Scale(0.1 / (distance * distance))
+	force := direction.Scale(0.01 / (distance * distance))
 
 	return force
 }

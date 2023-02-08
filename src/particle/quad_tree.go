@@ -16,13 +16,24 @@ type QuadTree struct {
 	parent    *QuadTree
 }
 
-func NewQuadTree(minX, minY, maxX, maxY float64) *QuadTree {
+func NewQuadTree(minX, minY, maxX, maxY float64, parent *QuadTree) *QuadTree {
 	return &QuadTree{
 		boundary: Bounds{
 			Min: VV(minX, minY),
 			Max: VV(maxX, maxY),
 		},
+		parent: parent,
 	}
+}
+
+func (q *QuadTree) Rebalance() *QuadTree {
+	t := NewQuadTree(q.boundary.Min.X, q.boundary.Min.Y, q.boundary.Max.X, q.boundary.Max.Y, q.parent)
+
+	q.ForEach(func(p *Particle) {
+		t.Insert(p)
+	})
+
+	return t
 }
 
 func (q *QuadTree) Insert(particle *Particle) bool {
@@ -38,14 +49,6 @@ func (q *QuadTree) Insert(particle *Particle) bool {
 
 		q.subdivide()
 	}
-
-	for _, n := range q.nodes {
-		for _, p := range q.particles {
-			n.Insert(p)
-		}
-	}
-
-	q.particles = nil
 
 	for _, n := range q.nodes {
 		if n.Insert(particle) {
@@ -93,10 +96,20 @@ func (q *QuadTree) subdivide() {
 	h := q.boundary.Max.Y - y
 
 	q.divided = true
-	q.nodes[0] = NewQuadTree(x, y, x+w/2, y+h/2)
-	q.nodes[1] = NewQuadTree(x+w/2, y, x+w, y+h/2)
-	q.nodes[2] = NewQuadTree(x, y+h/2, x+w/2, y+h)
-	q.nodes[3] = NewQuadTree(x+w/2, y+h/2, x+w, y+h)
+	q.nodes[0] = NewQuadTree(x, y, x+w/2, y+h/2, q)
+	q.nodes[1] = NewQuadTree(x+w/2, y, x+w, y+h/2, q)
+	q.nodes[2] = NewQuadTree(x, y+h/2, x+w/2, y+h, q)
+	q.nodes[3] = NewQuadTree(x+w/2, y+h/2, x+w, y+h, q)
+
+	if q.particles != nil {
+		for _, n := range q.nodes {
+			for _, p := range q.particles {
+				n.Insert(p)
+			}
+		}
+
+		q.particles = nil
+	}
 }
 
 func (q *QuadTree) Debug(screen *ebiten.Image, depth int) {
