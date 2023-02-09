@@ -53,6 +53,8 @@ func (s *ParticleSystem) update() {
 	if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
 		s.state = STATE_PAUSE
 	}
+
+	s.tree.Rebalance()
 }
 
 func (s *ParticleSystem) Draw(screen *ebiten.Image) {

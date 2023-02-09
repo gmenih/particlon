@@ -10,8 +10,8 @@ import (
 )
 
 const (
-	WIDTH  = 1200
-	HEIGHT = 800
+	WIDTH  = 3000
+	HEIGHT = 1300
 )
 
 func main() {
@@ -20,6 +20,8 @@ func main() {
 
 	ebiten.SetWindowSize(WIDTH, HEIGHT)
 	ebiten.SetWindowTitle("Particlon")
+	ebiten.SetWindowResizable(true)
+	// ebiten.SetMaxTPS()
 
 	system := particlon.NewParticleSystem(WIDTH, HEIGHT)
 

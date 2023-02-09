@@ -9,13 +9,13 @@ import (
 )
 
 var colors = []color.Color{
-	colornames.Red,
 	colornames.Blue,
-	colornames.Pink,
+	colornames.Red,
+	colornames.Yellow,
 	colornames.Green,
-	colornames.Lime,
+	colornames.Purple,
 	colornames.Aquamarine,
-	colornames.Chartreuse,
+	colornames.Lime,
 }
 
 func (t *Tree[TElement]) Debug(image *ebiten.Image, depth int) {
@@ -27,7 +27,7 @@ func (t *Tree[TElement]) Debug(image *ebiten.Image, depth int) {
 	} else {
 		for _, e := range t.elements {
 			x, y := e.Identity()
-			ebitenutil.DrawRect(image, x-3, y-3, 6, 6, col)
+			ebitenutil.DrawRect(image, x-2, y-2, 4, 4, col)
 		}
 	}
 

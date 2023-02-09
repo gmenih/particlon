@@ -9,9 +9,10 @@ type Identifiable interface {
 }
 
 type Tree[TElement Identifiable] struct {
-	boundary Bounds
-	elements []TElement
-	nodes    [4]*Tree[TElement]
+	boundary    Bounds
+	elements    []TElement
+	allElements []TElement
+	nodes       [4]*Tree[TElement]
 
 	isLeaf   bool
 	capacity int
@@ -30,6 +31,15 @@ func NewTree[TElement Identifiable](boundary Bounds, parent *Tree[TElement]) *Tr
 }
 
 func (t *Tree[TElement]) Insert(e TElement) bool {
+	v := t.insert(e)
+	if v && t.parent == nil {
+		t.allElements = append(t.allElements, e)
+	}
+
+	return v
+}
+
+func (t *Tree[TElement]) insert(e TElement) bool {
 	if !t.boundary.Contains(e.Identity()) {
 		return false
 	}
@@ -53,40 +63,10 @@ func (t *Tree[TElement]) Insert(e TElement) bool {
 }
 
 func (t *Tree[TElement]) ForEach(f func(TElement)) {
-	if t.isLeaf {
-		d := 0
-		for i := 0; i < len(t.elements); i++ {
-			f(t.elements[i])
-
-			if len(t.elements) > 0 && t.rebalanceElement(t.elements[i], 0) {
-				t.elements = append(t.elements[:i], t.elements[i+1-d:]...)
-				i--
-			}
-		}
-		return
+	for _, e := range t.allElements {
+		f(e)
 	}
-
-	for _, n := range t.nodes {
-		n.ForEach(f)
-	}
-}
-
-func (t *Tree[TElement]) rebalanceElement(e TElement, depth int) bool {
-	x, y := e.Identity()
-
-	if t.boundary.Contains(x, y) {
-		if depth == 0 {
-			return false
-		}
-
-		return t.Insert(e)
-	}
-
-	if t.parent != nil {
-		return t.parent.rebalanceElement(e, depth+1)
-	}
-
-	return false
+	// if t.isLeddd
 }
 
 func (t *Tree[TElement]) split() {
@@ -111,4 +91,14 @@ func (t *Tree[TElement]) split() {
 	}
 
 	t.elements = nil
+}
+
+func (t *Tree[TElement]) Rebalance() {
+	t.nodes = [4]*Tree[TElement]{}
+	t.isLeaf = true
+	t.elements = make([]TElement, 0, NODE_CAPACITY)
+
+	for _, e := range t.allElements {
+		t.insert(e)
+	}
 }
