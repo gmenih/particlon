@@ -1,7 +1,7 @@
 package main
 
 import (
-	"gmenih/particlon/src/particle"
+	"gmenih/particlon/src/particlon/particlon"
 	"log"
 	"math/rand"
 	"time"
@@ -10,18 +10,22 @@ import (
 )
 
 const (
-	screenWidth  = 800
-	screenHeight = 600
+	WIDTH  = 1200
+	HEIGHT = 800
 )
 
 func main() {
 
 	rand.Seed(time.Now().UnixNano())
 
-	ebiten.SetWindowSize(screenWidth, screenHeight)
+	ebiten.SetWindowSize(WIDTH, HEIGHT)
 	ebiten.SetWindowTitle("Particlon")
 
-	system := particle.NewParticleSystem(screenWidth, screenHeight)
+	system := particlon.NewParticleSystem(WIDTH, HEIGHT)
+
+	system.InitParticles()
+
+	// system := particle.NewParticleSystem(particle.SCREEN_WIDTH, particle.SCREEN_HEIGHT)
 
 	if err := ebiten.RunGame(system); err != nil {
 		log.Fatal(err)
