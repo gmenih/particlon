@@ -56,7 +56,7 @@ func (t *Tree[TElement]) insert(e TElement) bool {
 	}
 
 	for _, n := range t.nodes {
-		if n.Insert(e) {
+		if n.insert(e) {
 			return true
 		}
 	}
@@ -110,7 +110,7 @@ func (t *Tree[TElement]) split() {
 
 	for _, e := range t.elements {
 		for _, n := range t.nodes {
-			n.Insert(e)
+			n.insert(e)
 		}
 	}
 
