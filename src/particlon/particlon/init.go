@@ -14,7 +14,7 @@ func (s *ParticleSystem) InitParticles() {
 	s.sprites = particle.GenerateSprites()
 	w, h := s.size.VV()
 
-	for i := 0; i < 50000; i++ {
+	for i := 0; i < 5000; i++ {
 		r := uint8(rand.Intn(len(s.sprites)))
 		p := particle.NewParticle(
 			base.VV(randFloat(0, w), randFloat(0, h)),

@@ -26,7 +26,7 @@ func (t *Tree[TElement]) Debug(image *ebiten.Image, depth int) {
 		}
 	} else {
 		for _, e := range t.elements {
-			x, y := e.Identity()
+			x, y := e.Identity().VV()
 			ebitenutil.DrawRect(image, x-2, y-2, 4, 4, col)
 		}
 	}

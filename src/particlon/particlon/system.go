@@ -47,6 +47,13 @@ func (s *ParticleSystem) init() {
 
 func (s *ParticleSystem) update() {
 	s.tree.ForEach(func(p *particle.Particle) {
+		neighbors := s.tree.QueryRange(quad.BB(p.Position, 20))
+		for _, n := range neighbors {
+			if n != p {
+				p.Attract(n)
+			}
+		}
+
 		p.Update()
 	})
 

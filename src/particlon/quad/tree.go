@@ -1,11 +1,13 @@
 package quad
 
+import "gmenih/particlon/src/particlon/base"
+
 const (
 	NODE_CAPACITY = 16
 )
 
 type Identifiable interface {
-	Identity() (float64, float64)
+	Identity() base.Vector
 }
 
 type Tree[TElement Identifiable] struct {
@@ -66,7 +68,29 @@ func (t *Tree[TElement]) ForEach(f func(TElement)) {
 	for _, e := range t.allElements {
 		f(e)
 	}
-	// if t.isLeddd
+}
+
+func (t *Tree[TElement]) QueryRange(b Bounds) []TElement {
+	if !t.boundary.Intersects(b) {
+		return nil
+	}
+
+	var elements []TElement
+	if t.isLeaf {
+		for _, e := range t.elements {
+			if b.Contains(e.Identity()) {
+				elements = append(elements, e)
+			}
+		}
+
+		return elements
+	} else {
+		for _, n := range t.nodes {
+			elements = append(elements, n.QueryRange(b)...)
+		}
+	}
+
+	return elements
 }
 
 func (t *Tree[TElement]) split() {
