@@ -43,12 +43,12 @@ func (p *Particle) Identity() base.Vector {
 func (p *Particle) Attract(p2 *Particle) {
 	diff := p.Position.Sub(p2.Position)
 	distance := diff.Length()
-	scale := 0.005
+	scale := 0.0
 
-	if p.Kind != p2.Kind {
-		scale -= 0.01
-	} else if distance < 2 {
-		scale *= -1
+	if p.Kind == p2.Kind && distance >= 3 {
+		scale = 0.005
+	} else {
+		scale = -0.0002
 	}
 
 	force := diff.Normalize().Scale(scale)

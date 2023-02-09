@@ -10,8 +10,8 @@ import (
 )
 
 const (
-	WIDTH  = 860
-	HEIGHT = 640
+	WIDTH  = 3000
+	HEIGHT = 1300
 )
 
 func main() {
