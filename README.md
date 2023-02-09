@@ -6,9 +6,10 @@ An attempt at a particle system written in Golang, using [Ebiten engine](https:/
 
 - [x] Particles
 - [x] QuadTree
-    - [ ] Optimize lookup
-    - [ ] Re-insert particles while they move outside of the quadrant
-- [ ] Attraction/Repulsion between particles
+    - [x] Optimize lookup
+    - [x] ~~Re-insert particles while they move outside of the quadrant~~
+    - [x] Rebuild the tree to generate new nodes
+- [x] Attraction/Repulsion between particles
 - [ ] Prevent particle collapsing
 - [ ] Repulsion/Attraction matrix between particles
 - [ ] Runtime config
