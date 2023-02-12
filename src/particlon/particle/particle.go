@@ -13,6 +13,7 @@ type Particle struct {
 	Position base.Vector
 
 	velocity base.Vector
+	size     float64
 
 	sprite *ebiten.Image
 }
@@ -23,10 +24,11 @@ func NewParticle(position, velocity base.Vector, kind ParticleKind, sprite *ebit
 		Position: position,
 		velocity: velocity,
 		sprite:   sprite,
+		size:     3.0,
 	}
 }
 
-func (p *Particle) Update() {
+func (p *Particle) Update(w, h float64) {
 	p.Position = p.Position.Add(p.velocity)
 }
 
@@ -38,19 +40,4 @@ func (p *Particle) Draw(screen *ebiten.Image) {
 
 func (p *Particle) Identity() base.Vector {
 	return p.Position
-}
-
-func (p *Particle) Attract(p2 *Particle) {
-	diff := p.Position.Sub(p2.Position)
-	distance := diff.Length()
-	scale := 0.0
-
-	if p.Kind == p2.Kind && distance >= 3 {
-		scale = 0.005
-	} else {
-		scale = -0.0002
-	}
-
-	force := diff.Normalize().Scale(scale)
-	p.velocity = p.velocity.Sub(force)
 }

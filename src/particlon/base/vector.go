@@ -36,6 +36,18 @@ func (v Vector) Length() float64 {
 	return math.Sqrt(v.X*v.X + v.Y*v.Y)
 }
 
+func (v Vector) Distance(v2 Vector) float64 {
+	return v.Sub(v2).Length()
+}
+
+func (v Vector) Limit(max float64) Vector {
+	l := v.Length()
+	if l > max {
+		return v.Normalize().Scale(max)
+	}
+	return v
+}
+
 func (v Vector) Normalize() Vector {
 	l := v.Length()
 	return Vector{
